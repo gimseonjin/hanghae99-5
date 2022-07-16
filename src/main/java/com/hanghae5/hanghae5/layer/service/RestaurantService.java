@@ -6,6 +6,7 @@ import com.hanghae5.hanghae5.layer.model.Restaurant;
 import com.hanghae5.hanghae5.layer.model.dto.request.AddMenuRequest;
 import com.hanghae5.hanghae5.layer.model.dto.request.CreateRestaurantRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,9 +22,9 @@ public class RestaurantService {
     }
 
 
-    public void addRestaurant(CreateRestaurantRequest createRestaurantRequest){
+    public Restaurant addRestaurant(CreateRestaurantRequest createRestaurantRequest){
         Restaurant restaurant = createRestaurantRequest.toRestaurant();
-        restaurantRepository.save(restaurant);
+        return restaurantRepository.save(restaurant);
     }
 
     public List<Restaurant> getAllRestaurant(){
@@ -35,7 +36,8 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("해당 레스토랑을 찾을 수 없습니다."));
 
-        addMenuRequests.stream().map(AddMenuRequest::toFood)
+        addMenuRequests.stream()
+                .map(AddMenuRequest::toFood)
                 .forEach(menu -> restaurant.addMenu(menu));
 
         restaurantRepository.save(restaurant);

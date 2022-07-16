@@ -30,15 +30,19 @@ public class GetOrdersResponse {
         this.restaurantName = restaurant.getName();
         this.deliveryFee = restaurant.getDeliveryFee();
         this.foods = orderQuantityList.stream()
-                .map(orderQuantity -> new Foods(orderQuantity.getFood()))
+                .map(orderQuantity -> new Foods(orderQuantity))
                 .collect(Collectors.toList());
-        this.totalPrice = this.calTotalPrice(orderQuantityList);
+        this.totalPrice = this.calTotalPrice();
     }
 
-    private int calTotalPrice(List<OrderQuantity> foods){
+    public int calTotalPriceWithoutDeliveryFee(){
         return foods.stream()
                 .map(food -> food.getPrice())
-                .reduce(0,(f1,f2)->f1+f2) + this.deliveryFee;
+                .reduce(0,(f1,f2)->f1+f2);
+    }
+
+    private int calTotalPrice(){
+        return this.calTotalPriceWithoutDeliveryFee() + this.deliveryFee;
     }
 
     @Data
@@ -51,9 +55,9 @@ public class GetOrdersResponse {
         @NotNull
         private int price;
 
-        public Foods(Food food){
-            this.name = food.getName();
-            this.price = food.getPrice();
+        public Foods(OrderQuantity orderQuantity){
+            this.name = orderQuantity.getFood().getName();
+            this.price = orderQuantity.getPrice();
         }
     }
 }

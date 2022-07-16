@@ -33,6 +33,9 @@ public class OrderService {
 
     @Transactional
     public GetOrdersResponse order(CreateOrderRequest createOrderRequest){
+        // 주문 최대 수량 체크
+        checkTotalQuantity(createOrderRequest);
+
         // 주문 객체 생성
         Ordel order = Ordel.builder().orderQuantityList(new ArrayList<>()).build();
 
@@ -94,8 +97,19 @@ public class OrderService {
     }
 
     private void checkTotalPriceBiggerThanMinOrderPrice(GetOrdersResponse getOrdersResponse, Restaurant restaurant){
-        // 배달비가 최소 주문 금액이 넘는 지 체크
-        if(getOrdersResponse.getTotalPrice() < restaurant.getMinOrderPrice())
+        // 배달비가 최소 주문 금액이 넘는 지 체크, 이때 배달비는 포함되선 안된다.
+
+        if(getOrdersResponse.calTotalPriceWithoutDeliveryFee() < restaurant.getMinOrderPrice())
             throw new RuntimeException("배달비가 최소 금액을 넘어야합니다.");
+    }
+
+    private void checkTotalQuantity(CreateOrderRequest createOrderRequest){
+        // 주문 시, 전체 음식 주문량 계산
+        int totalQuantity = createOrderRequest.getFoods()
+                .stream().map(CreateOrderRequest.FoodRequest::getQuantity).reduce(0, (x, y)-> x + y);
+
+        // 일회 음식 주문 최대 수량 초과여부 판단.
+        if(totalQuantity > 100)
+            throw new RuntimeException("일회 음식 주문 최대 수량을 초과하였습니다 : 최대 100개");
     }
 }

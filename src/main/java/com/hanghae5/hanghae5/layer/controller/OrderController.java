@@ -21,15 +21,15 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/order")
+    @PostMapping("/order/request")
     public ResponseEntity order(@RequestBody CreateOrderRequest createOrderRequest){
         GetOrdersResponse result = orderService.order(createOrderRequest);
-        return new ResponseEntity(result, HttpStatus.CREATED);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     @GetMapping("/orders")
     public ResponseEntity getOrders(){
         List<GetOrdersResponse> results = orderService.getOrders();
-        return new ResponseEntity(results, HttpStatus.CREATED);
+        return new ResponseEntity(results, HttpStatus.OK);
     }
 }

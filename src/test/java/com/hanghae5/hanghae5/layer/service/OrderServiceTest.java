@@ -105,8 +105,8 @@ class OrderServiceTest extends DefaultServiceTest{
         // 음식이 제대로 매핑됐는가?
         boolean isNotFoodsCollect = order.getFoods().stream()
                 .filter(foods -> !(foods.getName().equals("쉑버거 더블") && foods.getPrice() == 10900))
-                .filter(foods -> !(foods.getName().equals("치즈 감자튀김") && foods.getPrice() == 9800))
-                .filter(foods -> !(foods.getName().equals("쉐이크") && foods.getPrice() == 17700))
+                .filter(foods -> !(foods.getName().equals("치즈 감자튀김") && foods.getPrice() == 19600))
+                .filter(foods -> !(foods.getName().equals("쉐이크") && foods.getPrice() == 53100))
                 .findAny().isPresent();
         assertEquals(false, isNotFoodsCollect);
 

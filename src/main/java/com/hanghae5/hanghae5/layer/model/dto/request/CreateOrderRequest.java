@@ -26,7 +26,6 @@ public class CreateOrderRequest {
     @Builder
     public static class FoodRequest{
         private Long id;
-        @Range(min = 1,max = 100)
         private int quantity;
     }
 }
