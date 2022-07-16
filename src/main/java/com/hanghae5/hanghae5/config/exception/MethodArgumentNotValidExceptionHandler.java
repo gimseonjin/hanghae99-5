@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class MethodArgumentNotValidExceptionHandler {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity validationErrorException(final MethodArgumentNotValidException e) {
         return ResponseEntity

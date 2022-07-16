@@ -1,4 +1,6 @@
-package com.hanghae5.hanghae5.config.validation;
+package com.hanghae5.hanghae5.config.validation.annotation;
+
+import com.hanghae5.hanghae5.config.validation.CheckMoneyUnitValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

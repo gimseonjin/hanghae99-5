@@ -1,5 +1,7 @@
 package com.hanghae5.hanghae5.config.validation;
 
+import com.hanghae5.hanghae5.config.validation.annotation.CheckMoneyUnit;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

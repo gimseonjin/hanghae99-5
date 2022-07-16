@@ -1,6 +1,5 @@
 package com.hanghae5.hanghae5.layer.model.dto.response;
 
-import com.hanghae5.hanghae5.layer.model.Food;
 import com.hanghae5.hanghae5.layer.model.Ordel;
 import com.hanghae5.hanghae5.layer.model.OrderQuantity;
 import com.hanghae5.hanghae5.layer.model.Restaurant;

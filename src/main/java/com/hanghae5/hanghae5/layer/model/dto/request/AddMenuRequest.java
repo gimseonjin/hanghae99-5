@@ -1,7 +1,7 @@
 package com.hanghae5.hanghae5.layer.model.dto.request;
 
 
-import com.hanghae5.hanghae5.config.validation.CheckMoneyUnit;
+import com.hanghae5.hanghae5.config.validation.annotation.CheckMoneyUnit;
 import com.hanghae5.hanghae5.layer.model.Food;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
