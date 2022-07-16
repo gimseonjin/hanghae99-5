@@ -42,14 +42,14 @@ public class OrderService {
         // Request 주문 객체로 변환
         requestToOrder(createOrderRequest, order);
 
-        // DB에 저장
-        orderRepository.save(order);
-
         // 주문 객체 Response 변환
         GetOrdersResponse getOrdersResponse = new GetOrdersResponse(order);
 
         // 최소 주문 체크
         checkTotalPriceBiggerThanMinOrderPrice(getOrdersResponse, order.getRestaurant());
+
+        // DB에 저장
+        orderRepository.save(order);
 
         // 결과 반환
         return getOrdersResponse;
