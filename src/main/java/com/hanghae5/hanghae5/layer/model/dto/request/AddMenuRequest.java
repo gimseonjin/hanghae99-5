@@ -22,7 +22,7 @@ public class AddMenuRequest {
 
     @NotNull
     @Range(min = 100, max = 1000000)
-    @CheckMoneyUnit(unit = 100)
+    @CheckMoneyUnit(unit = 100, message = "최소 금액 단위가 맞지 않습니다. - 최소 단위 : 100원")
     private int price;
 
     public Food toFood(){
