@@ -17,21 +17,19 @@ import java.util.List;
 
 @RestController
 public class RestaurantController {
+    private final RestaurantService restaurantService;
+    private final CostumValidator costumValidator;
 
-    @Autowired
-    private CostumValidator costumValidator;
+    public RestaurantController(CostumValidator costumValidator, RestaurantService restaurantService) {
+        this.costumValidator = costumValidator;
+        this.restaurantService = restaurantService;
+    }
 
     // List는 Validation이 되지 않는다.
     // 따라서 커스텀으로 Validation을 만들어서 주입해야한다.
     @InitBinder()
     void initListOfRequestValidator(WebDataBinder binder) {
         binder.setValidator(costumValidator);
-    }
-
-    private final RestaurantService restaurantService;
-
-    public RestaurantController(RestaurantService restaurantService) {
-        this.restaurantService = restaurantService;
     }
 
     @PostMapping("/restaurant/register")

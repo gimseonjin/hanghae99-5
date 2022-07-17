@@ -7,6 +7,7 @@ import com.hanghae5.hanghae5.layer.model.OrderQuantity;
 import com.hanghae5.hanghae5.layer.model.Restaurant;
 import com.hanghae5.hanghae5.layer.model.dto.request.CreateOrderRequest;
 import com.hanghae5.hanghae5.layer.model.dto.response.GetOrdersResponse;
+import com.hanghae5.hanghae5.layer.service.Order.OrderCreateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-class OrderServiceTest extends DefaultServiceTest{
+class OrderCreateServiceTest extends DefaultServiceTest{
 
     @BeforeEach
     public void setup(){
@@ -82,7 +83,7 @@ class OrderServiceTest extends DefaultServiceTest{
     public void test1() throws JsonProcessingException {
 
         // Given
-        OrderService orderService = new OrderService(orderRepository, foodRepository, restaurantRepository);
+        OrderCreateService orderCreateService = new OrderCreateService(orderRepository, foodRepository, restaurantRepository);
 
         CreateOrderRequest createOrderRequest = CreateOrderRequest.builder()
                 .restaurantId(1L)
@@ -96,7 +97,7 @@ class OrderServiceTest extends DefaultServiceTest{
                 .build();
 
         // When
-        GetOrdersResponse order = orderService.order(createOrderRequest);
+        GetOrdersResponse order = orderCreateService.order(createOrderRequest);
 
         // Then
         // response 이름이 제대로 들어갔는가?
@@ -123,7 +124,7 @@ class OrderServiceTest extends DefaultServiceTest{
     public void test2() throws JsonProcessingException {
 
         // Given
-        OrderService orderService = new OrderService(orderRepository, foodRepository, restaurantRepository);
+        OrderCreateService orderCreateService = new OrderCreateService(orderRepository, foodRepository, restaurantRepository);
 
         CreateOrderRequest createOrderRequest = CreateOrderRequest.builder()
                 .restaurantId(1L)
@@ -136,7 +137,7 @@ class OrderServiceTest extends DefaultServiceTest{
                 .build();
 
         // When
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> orderService.order(createOrderRequest));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> orderCreateService.order(createOrderRequest));
 
         // Then
         assertEquals("배달비가 최소 금액을 넘어야합니다.", exception.getMessage());
