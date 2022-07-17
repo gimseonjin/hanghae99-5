@@ -24,7 +24,7 @@ public class RestaurantController {
     // List는 Validation이 되지 않는다.
     // 따라서 커스텀으로 Validation을 만들어서 주입해야한다.
     @InitBinder()
-    void initStudentValidator(WebDataBinder binder) {
+    void initListOfRequestValidator(WebDataBinder binder) {
         binder.setValidator(costumValidator);
     }
 
