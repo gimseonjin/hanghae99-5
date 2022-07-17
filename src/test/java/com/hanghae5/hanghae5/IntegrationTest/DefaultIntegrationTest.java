@@ -30,18 +30,18 @@ public class DefaultIntegrationTest {
     // =================================================
     @BeforeAll
     public void deleteAllBeforeTest(){
-        restaurantRepository.deleteAll();
-        orderRepository.deleteAll();
         orderQuantityRepository.deleteAll();
         foodRepository.deleteAll();
+        orderRepository.deleteAll();
+        restaurantRepository.deleteAll();
     }
 
     @AfterAll
     public void deleteAllAfterTest(){
-        restaurantRepository.deleteAll();
-        orderRepository.deleteAll();
         orderQuantityRepository.deleteAll();
         foodRepository.deleteAll();
+        orderRepository.deleteAll();
+        restaurantRepository.deleteAll();
     }
     // =================================================
 }

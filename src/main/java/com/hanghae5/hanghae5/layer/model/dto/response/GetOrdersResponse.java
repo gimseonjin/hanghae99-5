@@ -31,17 +31,7 @@ public class GetOrdersResponse {
         this.foods = orderQuantityList.stream()
                 .map(orderQuantity -> new Foods(orderQuantity))
                 .collect(Collectors.toList());
-        this.totalPrice = this.calTotalPrice();
-    }
-
-    public int calTotalPriceWithoutDeliveryFee(){
-        return foods.stream()
-                .map(food -> food.getPrice())
-                .reduce(0,(f1,f2)->f1+f2);
-    }
-
-    private int calTotalPrice(){
-        return this.calTotalPriceWithoutDeliveryFee() + this.deliveryFee;
+        this.totalPrice = order.getTotalPrice() + restaurant.getDeliveryFee();
     }
 
     @Data

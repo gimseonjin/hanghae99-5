@@ -26,11 +26,4 @@ public class CreateRestaurantRequest {
     @CheckMoneyUnit(unit = 500, message = "최소 금액 단위가 맞지 않습니다. - 최소 단위 : 500원")
     private int deliveryFee;
 
-    public Restaurant toRestaurant(){
-        return Restaurant.builder()
-                .name(name)
-                .minOrderPrice(minOrderPrice)
-                .deliveryFee(deliveryFee)
-                .build();
-    }
 }

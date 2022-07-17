@@ -26,23 +26,22 @@ public class Ordel {
     private Restaurant restaurant;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
     private List<OrderQuantity> orderQuantityList;
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
         //무한루프에 빠지지 않도록 체크
         if (!restaurant.getOrders().contains(this)) {
-            restaurant.getOrders().add(this);
+            restaurant.addOrders(this);
         }
     }
 
-    public void addQuantity(OrderQuantity orderQuantity) {
-        this.orderQuantityList.add(orderQuantity);
-        //무한루프에 빠지지 않도록 체크
-        if (orderQuantity.getOrder() != this) {
-            orderQuantity.setOrder(this);
-        }
+    public int getTotalPrice(){
+        return orderQuantityList.stream()
+                .map(OrderQuantity::getPrice)
+                .reduce(0, (x,y)->x+y);
     }
 
     @Override

@@ -18,7 +18,6 @@ public class CreateOrderRequest {
     private Long restaurantId;
     @NotNull
     private List<FoodRequest> foods;
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

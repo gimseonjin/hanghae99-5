@@ -20,9 +20,8 @@ public class RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
-
     public Restaurant addRestaurant(CreateRestaurantRequest createRestaurantRequest){
-        Restaurant restaurant = createRestaurantRequest.toRestaurant();
+        Restaurant restaurant = createRestaurantToRestaurant(createRestaurantRequest);
         return restaurantRepository.save(restaurant);
     }
 
@@ -36,7 +35,7 @@ public class RestaurantService {
                 .orElseThrow(() -> new RuntimeException("해당 레스토랑을 찾을 수 없습니다."));
 
         addMenuRequests.stream()
-                .map(AddMenuRequest::toFood)
+                .map(request -> addMenuRequestToFood(request))
                 .forEach(menu -> restaurant.addMenu(menu));
 
         restaurantRepository.save(restaurant);
@@ -48,6 +47,23 @@ public class RestaurantService {
                 .orElseThrow(() -> new RuntimeException("해당 레스토랑을 찾을 수 없습니다."));
 
         return restaurant.getMenu();
+    }
+
+
+    // ======================== Dto & Model 변환 부분 ========================
+    private Food addMenuRequestToFood(AddMenuRequest addMenuRequest){
+            return Food.builder()
+                    .name(addMenuRequest.getName())
+                    .price(addMenuRequest.getPrice())
+                    .build();
+    }
+
+    private Restaurant createRestaurantToRestaurant(CreateRestaurantRequest createRestaurantRequest){
+        return Restaurant.builder()
+                .name(createRestaurantRequest.getName())
+                .minOrderPrice(createRestaurantRequest.getMinOrderPrice())
+                .deliveryFee(createRestaurantRequest.getDeliveryFee())
+                .build();
     }
 
 }

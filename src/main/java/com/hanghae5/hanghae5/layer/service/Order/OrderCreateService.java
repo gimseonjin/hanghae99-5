@@ -33,11 +33,11 @@ public class OrderCreateService {
 
     @Transactional
     public GetOrdersResponse order(CreateOrderRequest createOrderRequest){
-        // 주문 최대 수량 체크
-        checkTotalQuantity(createOrderRequest);
-
         // Request 주문 객체로 변환
-        Ordel order = requestToOrder(createOrderRequest);
+        Ordel order = createOrderRequestToOrder(createOrderRequest);
+
+        // 주문 최대 수량 체크
+        checkTotalQuantity(order);
 
         // 주문 최소 금액이 넘는 지 체크
         checkTotalPriceBiggerThanMinOrderPrice(order);
@@ -49,12 +49,13 @@ public class OrderCreateService {
         return new GetOrdersResponse(order);
     }
 
-    private Ordel requestToOrder(CreateOrderRequest createOrderRequest){
+    // ======================== Dto & Model 변환 부분 ========================
+    private Ordel createOrderRequestToOrder(CreateOrderRequest createOrderRequest){
         // 주문 객체 생성
         Ordel order = Ordel.builder().orderQuantityList(new ArrayList<>()).build();
 
         // 주문 생성 요청 DTO 값 중, Food 부분 매핑하기
-        foodInCreateOrderRequestToOrder(createOrderRequest, order);
+        List<OrderQuantity> orderQuantityList = foodInCreateOrderRequestToOrder(createOrderRequest);
 
         // 레스토랑 객체 가져오기
         Restaurant restaurant = restaurantRepository.findById(createOrderRequest.getRestaurantId())
@@ -62,45 +63,36 @@ public class OrderCreateService {
 
         // 주문에 매핑
         order.setRestaurant(restaurant);
+        order.setOrderQuantityList(orderQuantityList);
 
         return order;
     }
 
-    private void foodInCreateOrderRequestToOrder(CreateOrderRequest createOrderRequest, Ordel order){
-        createOrderRequest.getFoods().stream()
+    private List<OrderQuantity> foodInCreateOrderRequestToOrder(CreateOrderRequest createOrderRequest){
+        return createOrderRequest.getFoods().stream()
                 .map(foods -> foodToOrderQuantity(foods)) // 주문량 객체를 주문 객체에 넣기
-                .forEach(orderQuantity -> order.addQuantity(orderQuantity));
+                .collect(Collectors.toList());
     }
 
     private OrderQuantity foodToOrderQuantity(CreateOrderRequest.FoodRequest foods){
         Food food = foodRepository.findById(foods.getId())
                 .orElseThrow(()->new RuntimeException("해당 음식을 찾을 수 없습니다."));
 
-        OrderQuantity orderQuantity = OrderQuantity.builder()
-                .food(food)
-                .quantity(foods.getQuantity())
-                .build();
-
-        orderQuantity.setFood(food);
-
-        return orderQuantity;
+        return OrderQuantity.builder()
+                .food(food).quantity(foods.getQuantity()).build();
     }
 
+    // ======================== Service 예외 처리 부분 ========================
     private void checkTotalPriceBiggerThanMinOrderPrice(Ordel order){
-        // 총 주문 금액 계산
-        int totalPrice = order.getOrderQuantityList().stream()
-                .map(OrderQuantity::getPrice)
-                .reduce(0, (x,y)->x+y);
-
         // 배달비가 최소 주문 금액이 넘는 지 체크, 이때 배달비는 포함되선 안된다.
-        if(totalPrice < order.getRestaurant().getMinOrderPrice())
+        if(order.getTotalPrice() < order.getRestaurant().getMinOrderPrice())
             throw new RuntimeException("배달비가 최소 금액을 넘어야합니다.");
     }
 
-    private void checkTotalQuantity(CreateOrderRequest createOrderRequest){
+    private void checkTotalQuantity(Ordel order){
         // 주문 시, 전체 음식 주문량 계산
-        int totalQuantity = createOrderRequest.getFoods()
-                .stream().map(CreateOrderRequest.FoodRequest::getQuantity).reduce(0, (x, y)-> x + y);
+        int totalQuantity = order.getOrderQuantityList().stream()
+                .map(orderQuantity -> orderQuantity.getQuantity()).reduce(0, (x, y)-> x + y);
 
         // 일회 음식 주문 최대 수량 초과여부 판단.
         if(totalQuantity > 100)
