@@ -39,17 +39,14 @@ public class OrderCreateService {
         // Request 주문 객체로 변환
         Ordel order = requestToOrder(createOrderRequest);
 
-        // 주문 객체 Response 변환
-        GetOrdersResponse getOrdersResponse = new GetOrdersResponse(order);
+        // 주문 최소 금액이 넘는 지 체크
+        checkTotalPriceBiggerThanMinOrderPrice(order);
 
-        // 최소 주문 체크
-        checkTotalPriceBiggerThanMinOrderPrice(getOrdersResponse, order.getRestaurant());
-
-        // DB에 저장
+        // 데이터 베이스에 저장
         orderRepository.save(order);
 
-        // 결과 반환
-        return getOrdersResponse;
+        // Response Entity에 담아서 반환
+        return new GetOrdersResponse(order);
     }
 
     private Ordel requestToOrder(CreateOrderRequest createOrderRequest){
@@ -89,9 +86,14 @@ public class OrderCreateService {
         return orderQuantity;
     }
 
-    private void checkTotalPriceBiggerThanMinOrderPrice(GetOrdersResponse getOrdersResponse, Restaurant restaurant){
+    private void checkTotalPriceBiggerThanMinOrderPrice(Ordel order){
+        // 총 주문 금액 계산
+        int totalPrice = order.getOrderQuantityList().stream()
+                .map(OrderQuantity::getPrice)
+                .reduce(0, (x,y)->x+y);
+
         // 배달비가 최소 주문 금액이 넘는 지 체크, 이때 배달비는 포함되선 안된다.
-        if(getOrdersResponse.calTotalPriceWithoutDeliveryFee() < restaurant.getMinOrderPrice())
+        if(totalPrice < order.getRestaurant().getMinOrderPrice())
             throw new RuntimeException("배달비가 최소 금액을 넘어야합니다.");
     }
 
