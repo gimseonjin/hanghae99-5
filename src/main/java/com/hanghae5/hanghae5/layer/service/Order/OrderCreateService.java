@@ -51,24 +51,24 @@ public class OrderCreateService {
 
     // ======================== Dto & Model 변환 부분 ========================
     private Ordel createOrderRequestToOrder(CreateOrderRequest createOrderRequest){
-        // 주문 객체 생성
-        Ordel order = Ordel.builder().orderQuantityList(new ArrayList<>()).build();
-
         // 주문 생성 요청 DTO 값 중, Food 부분 매핑하기
-        List<OrderQuantity> orderQuantityList = foodInCreateOrderRequestToOrder(createOrderRequest);
+        List<OrderQuantity> orderQuantityList =
+                foodsInCreateOrderRequestToOrderQuantityList(createOrderRequest);
 
         // 레스토랑 객체 가져오기
         Restaurant restaurant = restaurantRepository.findById(createOrderRequest.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("해당 레스토랑을 찾을 수 없습니다."));
 
-        // 주문에 매핑
-        order.setRestaurant(restaurant);
-        order.setOrderQuantityList(orderQuantityList);
+        // 주문 객체 생성
+        Ordel order = Ordel.builder()
+                .restaurant(restaurant)
+                .orderQuantityList(orderQuantityList)
+                .build();
 
         return order;
     }
 
-    private List<OrderQuantity> foodInCreateOrderRequestToOrder(CreateOrderRequest createOrderRequest){
+    private List<OrderQuantity> foodsInCreateOrderRequestToOrderQuantityList(CreateOrderRequest createOrderRequest){
         return createOrderRequest.getFoods().stream()
                 .map(foods -> foodToOrderQuantity(foods)) // 주문량 객체를 주문 객체에 넣기
                 .collect(Collectors.toList());
