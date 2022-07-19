@@ -1,14 +1,13 @@
 package com.hanghae5.hanghae5.IntegrationTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,44 +16,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FoodIntegrationTest extends DefaultIntegrationTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private HttpHeaders headers;
-    private ObjectMapper mapper = new ObjectMapper();
-
-    private RestaurantDto registeredRestaurant;
-
-    private FoodDto food1 = FoodDto.builder()
-            .id(null)
-            .name("쉑버거 더블")
-            .price(10900)
-            .build();
-
-    private FoodDto food2 = FoodDto.builder()
-            .id(null)
-            .name("치즈 감자튀김")
-            .price(4900)
-            .build();
-
-    private FoodDto food3 = FoodDto.builder()
-            .id(null)
-            .name("쉐이크")
-            .price(5900)
-            .build();
-
-    private FoodDto food4 = FoodDto.builder()
-            .id(null)
-            .name("스트로베리베리")
-            .price(11400)
-            .build();
-
-    @BeforeEach
-    public void setup() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-    }
 
     @Test
     @Order(1)
@@ -428,24 +389,5 @@ class FoodIntegrationTest extends DefaultIntegrationTest {
                             || response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    static class RestaurantDto {
-        private Long id;
-        private String name;
-        private int minOrderPrice;
-        private int deliveryFee;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    static class FoodDto {
-        private Long id;
-        private String name;
-        private int price;
     }
 }

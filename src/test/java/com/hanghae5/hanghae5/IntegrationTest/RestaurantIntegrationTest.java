@@ -1,35 +1,17 @@
 package com.hanghae5.hanghae5.IntegrationTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RestaurantIntegrationTest extends DefaultIntegrationTest{
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private HttpHeaders headers;
-    private ObjectMapper mapper = new ObjectMapper();
-
-    private final List<RestaurantDto> registeredRestaurants = new ArrayList<>();
-
-    @BeforeEach
-    public void setup() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-    }
 
     @Nested
     @DisplayName("음식점 3개 등록 및 조회")
@@ -338,13 +320,4 @@ class RestaurantIntegrationTest extends DefaultIntegrationTest{
         }
     }
 
-    @Getter
-    @Setter
-    @Builder
-    static class RestaurantDto {
-        private Long id;
-        private String name;
-        private int minOrderPrice;
-        private int deliveryFee;
-    }
 }
